@@ -1,16 +1,27 @@
 # Terraform cache and providers
 .terraform/
 .terraform.lock.hcl
- 
+
 # State files (sensitive - never commit)
 *.tfstate
 *.tfstate.backup
- 
+
 # Plan files
 tfplan
 *.tfplan
- 
+
 # Credentials (never commit)
 *.tfvars
 secrets.tf
- 
+*.auto.tfvars
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
