@@ -1,3 +1,8 @@
+# =============================================================================
+# EduStar Phase 2 — Terraform Variables
+# Group 5 | Scenario 5
+# =============================================================================
+
 variable "resource_group_name" {
   description = "Name of the resource group"
   type        = string
@@ -22,44 +27,21 @@ variable "vnet_address_space" {
   default     = ["10.0.0.0/16"]
 }
 
-variable "public_subnet_name" {
-  description = "Name of the public subnet"
-  type        = string
-  default     = "public-subnet"
-}
-
-variable "public_subnet_prefix" {
-  description = "Address prefix for public subnet"
-  type        = list(string)
-  default     = ["10.0.1.0/24"]
-}
-
-variable "private_subnet_name" {
-  description = "Name of the private subnet"
-  type        = string
-  default     = "private-subnet"
-}
-
-variable "private_subnet_prefix" {
-  description = "Address prefix for private subnet"
-  type        = list(string)
-  default     = ["10.0.2.0/24"]
-}
-
-variable "public_nsg_name" {
-  description = "Name of the public NSG"
-  type        = string
-  default     = "public-nsg"
-}
-
-variable "private_nsg_name" {
-  description = "Name of the private NSG"
-  type        = string
-  default     = "private-nsg"
-}
-
 variable "admin_ssh_ip" {
-  description = "IP address allowed to SSH into public subnet (your public IP)"
+  description = "IP address allowed to SSH (used in legacy public-nsg)"
   type        = string
   default     = "78.175.235.143"
+}
+
+variable "tenant_id" {
+  description = "Azure tenant ID"
+  type        = string
+  default     = "f0657e4e-050e-48c7-a0e0-b521d4c6fac5"
+}
+
+variable "db_admin_password" {
+  description = "PostgreSQL admin password"
+  type        = string
+  sensitive   = true
+  default     = "EduStar2026!"
 }
