@@ -6,18 +6,26 @@ BRANCH="${BRANCH:-}"
 SAS_TOKEN="${SAS_TOKEN:-}"
 SAS_TOKEN_B64="${SAS_TOKEN_B64:-}"
 
-for arg in "$@"; do
-  case "${arg}" in
-    REPO_URL=*) REPO_URL="${arg#REPO_URL=}" ;;
-    BRANCH=*) BRANCH="${arg#BRANCH=}" ;;
-    SAS_TOKEN=*) SAS_TOKEN="${arg#SAS_TOKEN=}" ;;
-    SAS_TOKEN_B64=*) SAS_TOKEN_B64="${arg#SAS_TOKEN_B64=}" ;;
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    REPO_URL=*) REPO_URL="${1#REPO_URL=}" ;;
+    REPO_URL) shift; REPO_URL="${1:-}" ;;
+    BRANCH=*) BRANCH="${1#BRANCH=}" ;;
+    BRANCH) shift; BRANCH="${1:-}" ;;
+    SAS_TOKEN=*) SAS_TOKEN="${1#SAS_TOKEN=}" ;;
+    SAS_TOKEN) shift; SAS_TOKEN="${1:-}" ;;
+    SAS_TOKEN_B64=*) SAS_TOKEN_B64="${1#SAS_TOKEN_B64=}" ;;
+    SAS_TOKEN_B64) shift; SAS_TOKEN_B64="${1:-}" ;;
+    *)
+      if [ -z "${REPO_URL}" ]; then REPO_URL="$1";
+      elif [ -z "${BRANCH}" ]; then BRANCH="$1";
+      elif [ -z "${SAS_TOKEN}" ] && [ -z "${SAS_TOKEN_B64}" ]; then SAS_TOKEN="$1";
+      fi
+      ;;
   esac
+  shift
 done
 
-if [ -z "${REPO_URL}" ] && [ "$#" -ge 1 ]; then REPO_URL="$1"; fi
-if [ -z "${BRANCH}" ] && [ "$#" -ge 2 ]; then BRANCH="$2"; fi
-if [ -z "${SAS_TOKEN}" ] && [ "$#" -ge 3 ]; then SAS_TOKEN="$3"; fi
 if [ -z "${SAS_TOKEN}" ] && [ -n "${SAS_TOKEN_B64}" ]; then
   SAS_TOKEN="$(printf '%s' "${SAS_TOKEN_B64}" | base64 -d)"
 fi
