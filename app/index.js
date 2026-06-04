@@ -753,7 +753,7 @@ function pipeVideoResponse(upstream, res) {
 }
 
 const server = http.createServer((req, res) => {
-  const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  const requestUrl = new URL(req.url, 'http://localhost');
   const pathname = requestUrl.pathname;
 
   if (pathname === '/') {
