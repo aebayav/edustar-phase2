@@ -71,14 +71,22 @@ const architecture = [
 ];
 
 const videoConfig = {
-  account: process.env.AZURE_STORAGE_ACCOUNT || 'edustarstorage',
-  container: process.env.AZURE_STORAGE_CONTAINER || 'videos',
-  blob: process.env.AZURE_STORAGE_BLOB || 'Test Video.mp4',
-  sasTokenFile: process.env.AZURE_STORAGE_SAS_TOKEN_FILE || '/etc/edustar-demo-sas-token'
+  account: cleanEnvValue(process.env.AZURE_STORAGE_ACCOUNT) || 'edustarstorage',
+  container: cleanEnvValue(process.env.AZURE_STORAGE_CONTAINER) || 'videos',
+  blob: cleanEnvValue(process.env.AZURE_STORAGE_BLOB) || 'Test Video.mp4',
+  sasTokenFile: cleanEnvValue(process.env.AZURE_STORAGE_SAS_TOKEN_FILE) || '/etc/edustar-demo-sas-token'
 };
 
 const port = Number(process.env.PORT || 80);
 const assetDir = path.join(__dirname, 'assets');
+
+function cleanEnvValue(value) {
+  if (!value) {
+    return '';
+  }
+
+  return String(value).trim().replace(/^(['"])(.*)\1$/, '$2');
+}
 
 function encodeBlobPath(blobName) {
   return blobName.split('/').map(encodeURIComponent).join('/');
