@@ -1,6 +1,15 @@
-# EduStar Demo App
+# EduStar Placeholder Demo App
 
-Single-page Node.js demo for the EduStar online education platform.
+Single-page Node.js placeholder for the CMPE433 scenario 5 online education platform migration PoC.
+
+The page avoids exam-specific course content and focuses on the required Azure proof points:
+
+- IaaS workload running on an Azure VM
+- PaaS workload represented by Azure Database for PostgreSQL
+- VNet split into public and private subnets
+- Azure Blob Storage holding real media data
+- Azure Monitor, Log Analytics, and alerting
+- Terraform-managed infrastructure
 
 ## Run locally
 
@@ -11,9 +20,9 @@ node index.js
 
 Open `http://localhost:8080`.
 
-## Azure Blob video
+## Azure Blob media
 
-The lesson player uses the Azure Blob Storage file below by default:
+The media placeholder uses the Azure Blob Storage file below by default:
 
 ```text
 https://edustarstorage.blob.core.windows.net/videos/Test%20Video.mp4
@@ -35,9 +44,10 @@ $env:AZURE_STORAGE_SAS_TOKEN="<sas-token-without-leading-question-mark>"
 node index.js
 ```
 
-Existing API endpoints:
+API endpoints:
 
 ```text
-GET /courses
 GET /health
+GET /workloads
+GET /courses
 ```
