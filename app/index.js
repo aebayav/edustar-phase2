@@ -74,7 +74,7 @@ const videoConfig = {
   account: process.env.AZURE_STORAGE_ACCOUNT || 'edustarstorage',
   container: process.env.AZURE_STORAGE_CONTAINER || 'videos',
   blob: process.env.AZURE_STORAGE_BLOB || 'Test Video.mp4',
-  sasTokenFile: process.env.AZURE_STORAGE_SAS_TOKEN_FILE || ''
+  sasTokenFile: process.env.AZURE_STORAGE_SAS_TOKEN_FILE || '/etc/edustar-demo-sas-token'
 };
 
 const port = Number(process.env.PORT || 80);
