@@ -73,7 +73,8 @@ const architecture = [
 const videoConfig = {
   account: process.env.AZURE_STORAGE_ACCOUNT || 'edustarstorage',
   container: process.env.AZURE_STORAGE_CONTAINER || 'videos',
-  blob: process.env.AZURE_STORAGE_BLOB || 'Test Video.mp4'
+  blob: process.env.AZURE_STORAGE_BLOB || 'Test Video.mp4',
+  sasTokenFile: process.env.AZURE_STORAGE_SAS_TOKEN_FILE || ''
 };
 
 const port = Number(process.env.PORT || 80);
@@ -89,8 +90,24 @@ function buildBlobVideoUrl() {
   }
 
   const baseUrl = `https://${videoConfig.account}.blob.core.windows.net/${videoConfig.container}/${encodeBlobPath(videoConfig.blob)}`;
-  const sasToken = (process.env.AZURE_STORAGE_SAS_TOKEN || '').replace(/^\?/, '');
+  const sasToken = readSasToken().replace(/^\?/, '');
   return sasToken ? `${baseUrl}?${sasToken}` : baseUrl;
+}
+
+function readSasToken() {
+  if (process.env.AZURE_STORAGE_SAS_TOKEN) {
+    return process.env.AZURE_STORAGE_SAS_TOKEN.trim();
+  }
+
+  if (!videoConfig.sasTokenFile) {
+    return '';
+  }
+
+  try {
+    return fs.readFileSync(videoConfig.sasTokenFile, 'utf8').trim();
+  } catch (error) {
+    return '';
+  }
 }
 
 function escapeHtml(value) {
@@ -708,10 +725,11 @@ function renderHomePage() {
 
 function proxyVideo(req, res) {
   const videoUrl = buildBlobVideoUrl();
+  const range = req.headers.range || '';
 
-  httpsGet(videoUrl, (upstream) => {
+  httpsGet(videoUrl, range, (upstream) => {
     if (upstream.statusCode >= 300 && upstream.statusCode < 400 && upstream.headers.location) {
-      httpsGet(upstream.headers.location, (redirected) => pipeVideoResponse(redirected, res)).on('error', () => {
+      httpsGet(upstream.headers.location, range, (redirected) => pipeVideoResponse(redirected, res)).on('error', () => {
         sendJson(res, 502, { error: 'Unable to read redirected video source' });
       });
       return;
@@ -723,11 +741,17 @@ function proxyVideo(req, res) {
   });
 }
 
-function httpsGet(url, callback) {
+function httpsGet(url, range, callback) {
+  const headers = {
+    'User-Agent': 'edustar-placeholder-demo/1.0'
+  };
+
+  if (range) {
+    headers.Range = range;
+  }
+
   return require('https').get(url, {
-    headers: {
-      'User-Agent': 'edustar-placeholder-demo/1.0'
-    }
+    headers
   }, callback);
 }
 
@@ -746,6 +770,10 @@ function pipeVideoResponse(upstream, res) {
 
   if (upstream.headers['content-length']) {
     headers['Content-Length'] = upstream.headers['content-length'];
+  }
+
+  if (upstream.headers['content-range']) {
+    headers['Content-Range'] = upstream.headers['content-range'];
   }
 
   res.writeHead(upstream.statusCode, headers);

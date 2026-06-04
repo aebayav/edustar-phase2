@@ -28,6 +28,7 @@ fi
 APP_ROOT="/opt/edustar-phase2"
 APP_DIR="${APP_ROOT}/app"
 SYSTEMD_ENV="/etc/edustar-demo.env"
+SAS_TOKEN_FILE="/etc/edustar-demo-sas-token"
 
 export DEBIAN_FRONTEND=noninteractive
 export HOME="${HOME:-/root}"
@@ -57,9 +58,12 @@ PORT=80
 AZURE_STORAGE_ACCOUNT=edustarstorage
 AZURE_STORAGE_CONTAINER=videos
 AZURE_STORAGE_BLOB="Test Video.mp4"
-AZURE_STORAGE_SAS_TOKEN="${SAS_TOKEN}"
+AZURE_STORAGE_SAS_TOKEN_FILE=${SAS_TOKEN_FILE}
 EOF
 chmod 600 "${SYSTEMD_ENV}"
+
+printf '%s' "${SAS_TOKEN}" >"${SAS_TOKEN_FILE}"
+chmod 600 "${SAS_TOKEN_FILE}"
 
 cat >/etc/systemd/system/edustar-demo.service <<EOF
 [Unit]
