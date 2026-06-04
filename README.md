@@ -241,20 +241,6 @@ terraform destroy
 
 ---
 
-## Demos
-
-### Demo 1 — Snapshot / Rollback
-
-VirtualBox veya Hyper-V'de Linux VM snapshot alma ve geri dönme işlemi.
-Ekran kaydı: `demos/snapshot-rollback.mp4`
-
-### Demo 2 — Container vs VM
-
-Docker container ile VirtualBox VM'in yan yana RAM/CPU karşılaştırması.
-Ekran kaydı: `demos/container-vs-vm.mp4`
-
----
-
 ## References
 
 - [Azure Pricing Calculator](https://azure.microsoft.com/en-us/pricing/calculator/)
